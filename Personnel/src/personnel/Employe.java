@@ -1,6 +1,8 @@
 package personnel;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+
 
 /**
  * Employé d'une ligue hébergée par la M2L. Certains peuvent 
@@ -16,8 +18,9 @@ public class Employe implements Serializable, Comparable<Employe>
 	private String nom, prenom, password, mail;
 	private Ligue ligue;
 	private GestionPersonnel gestionPersonnel;
-	
-	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password)
+	private LocalDate dateArrivee, dateDepart;
+
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password, LocalDate dateArrivee, LocalDate dateDepart)
 	{
 		this.gestionPersonnel = gestionPersonnel;
 		this.nom = nom;
@@ -25,8 +28,63 @@ public class Employe implements Serializable, Comparable<Employe>
 		this.password = password;
 		this.mail = mail;
 		this.ligue = ligue;
+		setDateArrivee(dateArrivee);
+		setDateDepart(dateDepart);
 	}
 	
+	Employe(GestionPersonnel gestionPersonnel, Ligue ligue, String nom, String prenom, String mail, String password)
+	{
+		this(gestionPersonnel, ligue, nom, prenom, mail, password, LocalDate.now(), null);
+	}
+
+
+
+	/**
+	 * Retourne la date d'arrivée de l'employé.
+	 * @return la date d'arrivée de l'employé. 
+	 */
+
+	public LocalDate getDateArrivee()
+	{
+		return dateArrivee;
+	}
+
+	/**
+	 * Change la date d'arrivée de l'employé si la date de d'arrivée n'est pas après la date de départ et qu'elle n'est pas nulle.
+	 * @param dateArrivee la nouvelle date d'arrivée.
+	 */
+
+	public void setDateArrivee(LocalDate dateArrivee)
+	{
+		if (dateArrivee == null)
+			throw new DatesIncoherentes("La date d'arrivée ne peut pas être nulle.");
+		if (dateDepart != null && dateArrivee.isAfter(dateDepart))
+			throw new DatesIncoherentes("La date d'arrivée ne peut pas être postérieure à la date de départ.");
+		this.dateArrivee = dateArrivee;
+	}
+
+	/**
+	 * Retourne la date de départ de l'employé.
+	 * @return la date de départ de l'employé. 
+	 */
+
+	public LocalDate getDateDepart()
+	{
+		return dateDepart;
+	}
+
+	/**
+	 * Change la date de départ de l'employé si la date de départ n'est pas avant la date d'arrivée et que les deux ne sont pas nulles.
+	 * @param dateDepart la nouvelle date de départ. 
+	 */
+
+	public void setDateDepart(LocalDate dateDepart)
+	{
+		if (dateDepart != null && dateArrivee != null && dateDepart.isBefore(dateArrivee))
+			throw new DatesIncoherentes("La date de départ ne peut pas être antérieure à la date d'arrivée.");
+		this.dateDepart = dateDepart;
+	}
+
 	/**
 	 * Retourne vrai ssi l'employé est administrateur de la ligue 
 	 * passée en paramètre.
@@ -35,7 +93,7 @@ public class Employe implements Serializable, Comparable<Employe>
 	 * @param ligue la ligue pour laquelle on souhaite vérifier si this 
 	 * est l'admininstrateur.
 	 */
-	
+
 	public boolean estAdmin(Ligue ligue)
 	{
 		return ligue.getAdministrateur() == this;
