@@ -1,11 +1,12 @@
 package commandLine;
 
-import static commandLineMenus.rendering.examples.util.InOut.getString;
-
 import commandLineMenus.ListOption;
 import commandLineMenus.Menu;
 import commandLineMenus.Option;
 import personnel.Employe;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import personnel.DatesIncoherentes;
 
 public class EmployeConsole 
 {

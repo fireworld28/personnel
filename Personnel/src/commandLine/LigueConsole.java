@@ -2,6 +2,8 @@ package commandLine;
 
 import static commandLineMenus.rendering.examples.util.InOut.getString;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import commandLineMenus.List;
@@ -164,6 +166,53 @@ public class LigueConsole
 				);
 	}
 	
+	private LocalDate lireDate(String invite)
+	{
+		String saisie = getString(invite).trim();
+		if (saisie.isEmpty())
+			return null;
+		return LocalDate.parse(saisie);
+	}
+
+	private Option changerDateArrivee(final Employe employe)
+	{
+		return new Option("Changer la date d'arrivée", "a", () ->
+		{
+			try
+			{
+				employe.setDateArrivee(lireDate("Nouvelle date d'arrivée (AAAA-MM-JJ) : "));
+				System.out.println("Date d'arrivée enregistrée : " + employe.getDateArrivee());
+			}
+			catch (DateTimeParseException exception)
+			{
+				System.err.println("Format invalide, la date doit être saisie sous la forme AAAA-MM-JJ.");
+			}
+			catch (DatesIncoherentes exception)
+			{
+				System.err.println(exception.getMessage());
+			}
+		});
+	}
+
+	private Option changerDateDepart(final Employe employe)
+	{
+		return new Option("Changer la date de départ", "d", () ->
+		{
+			try
+			{
+				employe.setDateDepart(lireDate("Nouvelle date de départ (AAAA-MM-JJ, vide = aucune) : "));
+				System.out.println("Date de départ enregistrée : " + employe.getDateDepart());
+			}
+			catch (DateTimeParseException exception)
+			{
+				System.err.println("Format invalide, la date doit être saisie sous la forme AAAA-MM-JJ.");
+			}
+			catch (DatesIncoherentes exception)
+			{
+				System.err.println(exception.getMessage());
+			}
+		});
+	}
 	private Option supprimer(Ligue ligue)
 	{
 		return new Option("Supprimer", "d", () -> {ligue.remove();});
