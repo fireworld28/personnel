@@ -46,6 +46,7 @@ public class LigueConsole
 				}
 		);
 	}
+	
 	private Option afficherEmployes(final Ligue ligue)
 	{
 		return new Option("Afficher les employes", "l", () -> {System.out.println(ligue.getEmployes());});
@@ -109,18 +110,31 @@ public class LigueConsole
 		Menu menu = new Menu("Gérer les employés de " + ligue.getNom(), "e");
 		menu.add(afficherEmployes(ligue));
 		menu.add(ajouterEmploye(ligue));
-		menu.add(modifierEmploye(ligue));
-		menu.add(supprimerEmploye(ligue));
+		menu.add(selectionnerEmploye(ligue));
 		menu.addBack("q");
 		return menu;
 	}
 
-	private List<Employe> supprimerEmploye(final Ligue ligue)
+	private List<Employe> selectionnerEmploye(final Ligue ligue)
 	{
-		return new List<>("Supprimer un employé", "s", 
+		return new List<Employe>("Sélectionner un employé", "e",
 				() -> new ArrayList<>(ligue.getEmployes()),
-				(index, element) -> {element.remove();}
+				(element) -> menuEmploye(element)
 				);
+	}
+	
+	private Menu menuEmploye(final Employe employe)
+	{
+		Menu menu = new Menu("Employé " + employe.getNom() + " " + employe.getPrenom());
+		menu.add(employeConsole.editerEmploye(employe));
+		menu.add(supprimerEmploye(employe));
+		menu.addBack("q");
+		return menu;
+	}
+	
+	private Option supprimerEmploye(final Employe employe)
+	{
+		return new Option("Supprimer l'employé", "s", () -> {employe.remove();});
 	}
 	
 	private List<Employe> changerAdministrateur(final Ligue ligue)
