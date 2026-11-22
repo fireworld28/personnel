@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS `personnelle`;
-CREATE DATABASE personnelle;
-USE personnelle;
+DROP DATABASE IF EXISTS `personnel`;
+CREATE DATABASE personnel;
+USE personnel;
 
 DROP TABLE IF EXISTS `ligue`;
 CREATE TABLE ligue
